@@ -534,7 +534,7 @@ open class Floaty: UIView {
      titlePosition's default value is left
      */
     @discardableResult
-    @objc open func addItem(_ title: String, icon: UIImage?, titlePosition: FloatyItemLabelPositionType = .left, handler: @escaping ((FloatyItem) -> Void)) -> FloatyItem {
+    @objc open func addItem(_ title: String, icon: UIImage?, titlePosition: FloatyItemLabelPositionType, handler: @escaping ((FloatyItem) -> Void)) -> FloatyItem {
         let item = FloatyItem()
         itemDefaultSet(item)
         item.titleLabelPosition = titlePosition
