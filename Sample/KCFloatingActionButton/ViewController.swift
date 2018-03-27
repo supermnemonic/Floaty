@@ -15,7 +15,7 @@ class ViewController: UIViewController, FloatyDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        //FloatyManager.defaultInstance().font = UIFont.boldSystemFont(ofSize: 6)
         layoutFAB()
     }
 
@@ -33,9 +33,7 @@ class ViewController: UIViewController, FloatyDelegate {
     
     func layoutFAB() {
         let item = FloatyItem()
-        item.hasShadow = false
-        item.buttonColor = UIColor.blue
-        item.circleShadowColor = UIColor.red
+        item.hasShadow = true
         item.titleShadowColor = UIColor.blue
         item.titleLabelPosition = .right
         item.title = "titlePosition right"
@@ -44,7 +42,8 @@ class ViewController: UIViewController, FloatyDelegate {
         }
 
         floaty.hasShadow = false
-        floaty.addItem(title: "I got a title")
+        floaty.itemShadowColor = .clear
+        floaty.addItem(title: "I got a title asdqwe asdzxchh")
         floaty.addItem("I got a icon", icon: UIImage(named: "icShare"))
         floaty.addItem("I got a handler", icon: UIImage(named: "icMap"), handler: { item in
             let alert = UIAlertController(title: "Hey", message: "I'm hungry...", preferredStyle: .alert)

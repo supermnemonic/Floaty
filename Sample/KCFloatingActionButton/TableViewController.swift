@@ -29,8 +29,6 @@ class TableViewController: UITableViewController, FloatyDelegate {
     
     func layoutFAB() {
         let item = FloatyItem()
-        item.buttonColor = UIColor.blue
-        item.circleShadowColor = UIColor.red
         item.titleShadowColor = UIColor.blue
         item.title = "Custom item"
         item.handler = { item in

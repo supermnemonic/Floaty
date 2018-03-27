@@ -20,33 +20,27 @@ open class FloatyItem: UIView {
 
     // MARK: - Properties
 
-    var contentInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-    
     /**
      This object's button size.
      */
-    @objc open var sizeWidth: CGFloat = 175 {
+    @objc open var size: CGFloat = 42 {
         didSet {
-            self.frame = CGRect(x: 0, y: 0, width: sizeWidth, height: size)
-            titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
-            //titleLabel.frame.origin.y = self.frame.height/2-titleLabel.frame.size.height/2
-            self.setNeedsDisplay()
-        }
-    }
-        
-    @objc open var size: CGFloat = 33 {
-        didSet {
-            self.frame = CGRect(x: 0, y: 0, width: sizeWidth, height: size)
-            titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
-            //titleLabel.frame.origin.y = self.frame.height/2-titleLabel.frame.size.height/2
+            self.frame = CGRect(x: 0, y: 0, width: size, height: size)
+            titleLabel.frame.origin.y = self.frame.height/2-titleLabel.frame.size.height/2
+            _iconImageView?.center = CGPoint(x: size/2, y: size/2) + imageOffset
             self.setNeedsDisplay()
         }
     }
 
     /**
+     Button color.
+     */
+    @objc open var buttonColor: UIColor = UIColor.white
+
+    /**
      Title label color.
      */
-    @objc open var titleColor: UIColor = UIColor.black {
+    @objc open var titleColor: UIColor = UIColor.white {
         didSet {
             titleLabel.textColor = titleColor
         }
@@ -56,7 +50,12 @@ open class FloatyItem: UIView {
      Enable/disable shadow.
      */
     @objc open var hasShadow: Bool = true
-    
+
+    /**
+     Circle Shadow color.
+     */
+    @objc open var circleShadowColor: UIColor = UIColor.black
+
     /**
      Title Shadow color.
      */
@@ -67,10 +66,23 @@ open class FloatyItem: UIView {
      */
     @objc open var handler: ((FloatyItem) -> Void)? = nil
 
+    @objc open var imageOffset: CGPoint = CGPoint.zero
+    @objc open var imageSize: CGSize = CGSize(width: 25, height: 25) {
+        didSet {
+            _iconImageView?.frame = CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height)
+            _iconImageView?.center = CGPoint(x: size/2, y: size/2) + imageOffset
+        }
+    }
+
     /**
      Reference to parent
      */
     open weak var actionButton: Floaty?
+
+    /**
+     Shape layer of button.
+     */
+    fileprivate var circleLayer: CAShapeLayer = CAShapeLayer()
 
     /**
      If you keeping touch inside button, button overlaid with tint layer.
@@ -84,10 +96,9 @@ open class FloatyItem: UIView {
     @objc open var titleLabelPosition: FloatyItemLabelPositionType = .left {
         didSet {
             if(titleLabelPosition == .left) {
-                //titleLabel.frame.origin.x = -titleLabel.frame.size.width
-                titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
+                titleLabel.frame.origin.x = -titleLabel.frame.size.width - 10
             } else { //titleLabel will be on right
-                titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
+                titleLabel.frame.origin.x = iconImageView.frame.origin.x + iconImageView.frame.size.width + 20
             }
         }
     }
@@ -102,10 +113,6 @@ open class FloatyItem: UIView {
                 _titleLabel = UILabel()
                 _titleLabel?.textColor = titleColor
                 _titleLabel?.font = FloatyManager.defaultInstance().font
-                _titleLabel?.textAlignment = .center
-                _titleLabel?.numberOfLines = 1
-                _titleLabel?.adjustsFontSizeToFitWidth = true
-                _titleLabel?.minimumScaleFactor = 0.5
                 addSubview(_titleLabel!)
             }
             return _titleLabel!
@@ -120,20 +127,63 @@ open class FloatyItem: UIView {
             titleLabel.text = title
             titleLabel.sizeToFit()
             if(titleLabelPosition == .left) {
-                //titleLabel.frame.origin.x = -titleLabel.frame.size.width
-                titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
+                titleLabel.frame.origin.x = -titleLabel.frame.size.width - 10
             } else { //titleLabel will be on right
-                titleLabel.frame = CGRect(x: contentInsets.left, y: 0, width: self.frame.width - contentInsets.left - contentInsets.right, height: size)
+                titleLabel.frame.origin.x = iconImageView.frame.origin.x + iconImageView.frame.size.width + 20
             }
             
-            //titleLabel.frame.origin.y = self.size/2-titleLabel.frame.size.height/2
+            titleLabel.frame.origin.y = self.size/2-titleLabel.frame.size.height/2
             
             if FloatyManager.defaultInstance().rtlMode {
                 titleLabel.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
-            } else {
+            }else {
                 titleLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0);
             }
+            
         }
+    }
+
+    /**
+     Item's icon image view.
+     */
+    var _iconImageView: UIImageView? = nil
+    @objc open var iconImageView: UIImageView {
+        get {
+            if _iconImageView == nil {
+                _iconImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+                _iconImageView?.center = CGPoint(x: size/2, y: size/2) + imageOffset
+                _iconImageView?.contentMode = UIViewContentMode.scaleAspectFill
+                addSubview(_iconImageView!)
+            }
+            return _iconImageView!
+        }
+    }
+
+    /**
+     Item's icon.
+     */
+    @objc open var icon: UIImage? = nil {
+        didSet {
+            iconImageView.image = icon
+        }
+    }
+    
+    /**
+     Item's icon tint color change
+     */
+    @objc open var iconTintColor: UIColor! = nil {
+        didSet {
+            let image = iconImageView.image?.withRenderingMode(.alwaysTemplate)
+            _iconImageView?.tintColor = iconTintColor
+            _iconImageView?.image = image
+        }
+    }
+
+    /**
+      itemBackgroundColor change
+    */
+    public var itemBackgroundColor: UIColor? = nil {
+      didSet { circleLayer.backgroundColor = itemBackgroundColor?.cgColor }
     }
 
     // MARK: - Initialize
@@ -143,7 +193,7 @@ open class FloatyItem: UIView {
      */
     public init() {
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        backgroundColor = UIColor.white
+        backgroundColor = UIColor.clear
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -158,13 +208,24 @@ open class FloatyItem: UIView {
 
         self.layer.shouldRasterize = true
         self.layer.rasterizationScale = UIScreen.main.scale
-        self.layer.cornerRadius = 2.0
-        self.layer.masksToBounds = true
+        createCircleLayer()
         setShadow()
 
         if _titleLabel != nil {
             bringSubview(toFront: _titleLabel!)
         }
+        if _iconImageView != nil {
+            bringSubview(toFront: _iconImageView!)
+        }
+    }
+
+    fileprivate func createCircleLayer() {
+        //        circleLayer.frame = CGRectMake(frame.size.width - size, 0, size, size)
+        let castParent : Floaty = superview as! Floaty
+        circleLayer.frame = CGRect(x: castParent.itemSize/2 - (size/2), y: 0, width: size, height: size)
+        circleLayer.backgroundColor = buttonColor.cgColor
+        circleLayer.cornerRadius = size/2
+        layer.addSublayer(circleLayer)
     }
 
     fileprivate func createTintLayer() {
@@ -180,7 +241,11 @@ open class FloatyItem: UIView {
         if !hasShadow {
             return
         }
-        
+        circleLayer.shadowOffset = CGSize(width: 1, height: 1)
+        circleLayer.shadowRadius = 2
+        circleLayer.shadowColor = circleShadowColor.cgColor
+        circleLayer.shadowOpacity = 0.4
+
         titleLabel.layer.shadowOffset = CGSize(width: 1, height: 1)
         titleLabel.layer.shadowRadius = 2
         titleLabel.layer.shadowColor = titleShadowColor.cgColor

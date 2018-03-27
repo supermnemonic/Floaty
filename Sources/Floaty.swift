@@ -113,7 +113,7 @@ open class Floaty: UIView {
      Child item's default size.
      */
     @IBInspectable
-    @objc open var itemSize: CGFloat = 42 {
+    @objc open var itemSize: CGFloat = 33 {
         didSet {
             self.items.forEach { item in
                 item.size = self.itemSize
@@ -133,7 +133,7 @@ open class Floaty: UIView {
      Child item's default title label color.
      */
     @IBInspectable
-    @objc open var itemTitleColor: UIColor = UIColor.white
+    @objc open var itemTitleColor: UIColor = UIColor.black
     
     /**
      Child item's image color
@@ -469,7 +469,6 @@ open class Floaty: UIView {
         itemDefaultSet(item)
         item.titleLabelPosition = titlePosition
         item.title = title
-        item.icon = icon
         addItem(item: item)
         return item
     }
@@ -482,7 +481,6 @@ open class Floaty: UIView {
         let item = FloatyItem()
         itemDefaultSet(item)
         item.title = title
-        item.icon = icon
         addItem(item: item)
         return item
     }
@@ -523,7 +521,6 @@ open class Floaty: UIView {
         let item = FloatyItem()
         itemDefaultSet(item)
         item.title = title
-        item.icon = icon
         item.handler = handler
         addItem(item: item)
         return item
@@ -539,7 +536,6 @@ open class Floaty: UIView {
         itemDefaultSet(item)
         item.titleLabelPosition = titlePosition
         item.title = title
-        item.icon = icon
         item.handler = handler
         addItem(item: item)
         return item
@@ -552,7 +548,6 @@ open class Floaty: UIView {
     @objc open func addItem(icon: UIImage?) -> FloatyItem {
         let item = FloatyItem()
         itemDefaultSet(item)
-        item.icon = icon
         addItem(item: item)
         return item
     }
@@ -564,7 +559,6 @@ open class Floaty: UIView {
     @objc open func addItem(icon: UIImage?, handler: @escaping ((FloatyItem) -> Void)) -> FloatyItem {
         let item = FloatyItem()
         itemDefaultSet(item)
-        item.icon = icon
         item.handler = handler
         addItem(item: item)
         return item
@@ -702,12 +696,9 @@ open class Floaty: UIView {
     }
     
     fileprivate func itemDefaultSet(_ item: FloatyItem) {
-        item.buttonColor = itemButtonColor
         
         /// Use separate color (if specified) for item button image, or default to the plusColor
-        item.iconImageView.tintColor = itemImageColor ?? plusColor
         item.titleColor = itemTitleColor
-        item.circleShadowColor = itemShadowColor
         item.titleShadowColor = itemShadowColor
         item.size = itemSize
     }
@@ -924,7 +915,7 @@ extension Floaty {
             item.layer.transform = CATransform3DIdentity
             let big = size > item.size ? size : item.size
             let small = size <= item.size ? size : item.size
-            item.frame.origin.x = big/2-small/2
+            item.frame.origin.x = -item.sizeWidth + size
             if verticalDirection == .up {
                 item.frame.origin.y = -itemHeight
             } else {
