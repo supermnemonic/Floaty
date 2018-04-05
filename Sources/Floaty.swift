@@ -74,7 +74,7 @@ open class Floaty: UIView {
      Animation speed of buttons
      */
     @IBInspectable
-    @objc open var animationSpeed: Double = 0.1
+    @objc open var animationSpeed: Double = 0.05
     /**
      Button color.
      */
@@ -913,8 +913,8 @@ extension Floaty {
             if item.isHidden == true { continue }
             itemHeight += item.size + itemSpace
             item.layer.transform = CATransform3DIdentity
-            let big = size > item.size ? size : item.size
-            let small = size <= item.size ? size : item.size
+            //let big = size > item.size ? size : item.size
+            //let small = size <= item.size ? size : item.size
             item.frame.origin.x = -item.sizeWidth + size
             if verticalDirection == .up {
                 item.frame.origin.y = -itemHeight
@@ -923,9 +923,9 @@ extension Floaty {
             }
             item.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
             group.enter()
-            UIView.animate(withDuration: 0.3, delay: delay,
-                           usingSpringWithDamping: 0.55,
-                           initialSpringVelocity: 0.3,
+            UIView.animate(withDuration: 0.2, delay: delay,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 1,
                            options: UIViewAnimationOptions(), animations: { () -> Void in
                             item.layer.transform = CATransform3DIdentity
                             item.alpha = 1
@@ -942,7 +942,7 @@ extension Floaty {
         for item in items.reversed() {
             if item.isHidden == true { continue }
             group.enter()
-            UIView.animate(withDuration: 0.15, delay: delay, options: [], animations: { () -> Void in
+            UIView.animate(withDuration: 0.16, delay: delay, options: [], animations: { () -> Void in
                 item.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
                 item.alpha = 0
             }, completion: { _ in
