@@ -41,6 +41,10 @@ class ViewController: UIViewController, FloatyDelegate {
             
         }
 
+        floaty.buttonColor = .blue
+        floaty.buttonColorOpen = .white
+        floaty.plusColor = .white
+        floaty.plusColorOpen = .blue
         floaty.hasShadow = false
         floaty.itemShadowColor = .clear
         floaty.addItem(title: "I got a title asdqwe asdzxchh")

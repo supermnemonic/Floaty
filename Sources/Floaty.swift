@@ -81,6 +81,9 @@ open class Floaty: UIView {
     @IBInspectable
     @objc open var buttonColor: UIColor = UIColor(red: 73/255.0, green: 151/255.0, blue: 241/255.0, alpha: 1)
     
+    @IBInspectable
+    @objc open var buttonColorOpen: UIColor = UIColor(white: 0.2, alpha: 1)
+    
     /**
      Button image.
      */
@@ -96,6 +99,9 @@ open class Floaty: UIView {
      */
     @IBInspectable
     @objc open var plusColor: UIColor = UIColor(white: 0.2, alpha: 1)
+    
+    @IBInspectable
+    @objc open var plusColorOpen: UIColor = UIColor(red: 73/255.0, green: 151/255.0, blue: 241/255.0, alpha: 1)
     
     /**
      Background overlaying color.
@@ -324,6 +330,8 @@ open class Floaty: UIView {
                            options: UIViewAnimationOptions(), animations: { () -> Void in
                             self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(self.rotationDegrees), 0.0, 0.0, 1.0)
                             self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(self.rotationDegrees))
+                            self.plusLayer.strokeColor = self.plusColorOpen.cgColor
+                            self.circleLayer.backgroundColor = self.buttonColorOpen.cgColor
                             self.overlayView.alpha = 1
             }, completion: {(f) -> Void in
                 self.overlayViewDidCompleteOpenAnimation = true
@@ -371,6 +379,8 @@ open class Floaty: UIView {
                            options: [], animations: { () -> Void in
                             self.plusLayer.transform = CATransform3DMakeRotation(self.degreesToRadians(0), 0.0, 0.0, 1.0)
                             self.buttonImageView.transform = CGAffineTransform(rotationAngle: self.degreesToRadians(0))
+                            self.plusLayer.strokeColor = self.plusColor.cgColor
+                            self.circleLayer.backgroundColor = self.buttonColor.cgColor
                             self.overlayView.alpha = 0
             }, completion: {(f) -> Void in
                 if self.overlayViewDidCompleteOpenAnimation {
