@@ -163,7 +163,7 @@ open class FloatyItem: UIView {
         setShadow()
 
         if _titleLabel != nil {
-            bringSubview(toFront: _titleLabel!)
+            bringSubviewToFront(_titleLabel!)
         }
     }
 
